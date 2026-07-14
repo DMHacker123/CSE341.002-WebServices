@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Create Book</title>
+
+
+<style>
+
+body {
+
+    font-family: Arial, sans-serif;
+    background:#f4f6f8;
+    padding:20px;
+
+}
+
+
+.container {
+
+    max-width:500px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 4px 10px rgba(0,0,0,.1);
+
+}
+
+
+h1 {
+
+    text-align:center;
+
+}
+
+
+input {
+
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+    box-sizing:border-box;
+
+}
+
+
+button {
+
+    width:100%;
+    padding:12px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+
+}
+
+
+button:hover {
+
+    background:#1d4ed8;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>📖 Create New Book</h1>
+
+
+<form id="bookForm">
+
+<input id="isbn" name="isbn">
+
+<input id="title" name="title">
+
+<input id="author" name="author">
+
+<input id="publisher" name="publisher">
+
+<input id="numOfPages" name="numOfPages">
+
+<label>ISBN</label>
+
+<input name="isbn" required>
+
+
+<label>Title</label>
+
+<input name="title" required>
+
+
+<label>Author</label>
+
+<input name="author" required>
+
+
+<label>Publisher</label>
+
+<input name="publisher">
+
+
+<label>Pages</label>
+
+<input name="numOfPages" type="number">
+
+
+<button type="submit">
+
+Create Book
+
+</button>
+
+
+</form>
+
+
+</div>
+
+<script src="new-book.js"></script>
+</body>
+
+</html>

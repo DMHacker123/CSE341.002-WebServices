@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Star Wars Quote App</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <h1>May Node and Express be with you.</h1>
+
+    <form action="/quotes" method="POST">
+      <input type="text" placeholder="name" name="name" />
+      <input type="text" placeholder="quote" name="quote" />
+      <button type="submit">Submit</button>
+    </form>
+
+    <ul>
+      <% quotes.forEach(function(quote) { %>
+        <li>
+          <form action="/quotes/<%= quote._id %>?_method=PUT" method="POST">
+            <input type="text" name="name" value="<%= quote.name %>" />
+            <input type="text" name="quote" value="<%= quote.quote %>" />
+            <button type="submit">Update</button>
+          </form>
+
+          <form action="/quotes/<%= quote._id %>?_method=DELETE" method="POST">
+            <button type="submit">Delete</button>
+          </form>
+        </li>
+      <% }) %>
+    </ul>
+  </body>
+</html>

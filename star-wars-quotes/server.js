@@ -30,8 +30,8 @@ MongoClient.connect(process.env.MONGO_URI)
     app.post('/quotes', (req, res) => {
       quotesCollection
         .insertOne(req.body)
-        .then(result => {
-          res.redirect('/')
+        .then(() => {
+        res.redirect('/')
         })
         .catch(error => console.error(error))
     })
@@ -42,8 +42,8 @@ MongoClient.connect(process.env.MONGO_URI)
           { _id: new ObjectId(req.params.id) },
           { $set: { name: req.body.name, quote: req.body.quote } }
         )
-        .then(result => {
-          res.redirect('/')
+        .then(() => {
+        res.redirect('/')
         })
         .catch(error => console.error(error))
     })
@@ -51,9 +51,9 @@ MongoClient.connect(process.env.MONGO_URI)
     app.delete('/quotes/:id', (req, res) => {
       quotesCollection
         .deleteOne({ _id: new ObjectId(req.params.id) })
-        .then(result => {
-          res.redirect('/')
-        })
+        .then(() => {
+        res.redirect('/')
+          })
         .catch(error => console.error(error))
     })
 

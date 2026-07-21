@@ -1,0 +1,32 @@
+{
+  "name": "cse-341-project1",
+  "version": "1.0.0",
+  "description": "My first project.",
+  "homepage": "https://github.com/DMHacker123/cse-341-project1#readme",
+  "bugs": {
+    "url": "https://github.com/DMHacker123/cse-341-project1/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DMHacker123/cse-341-project1.git"
+  },
+  "license": "ISC",
+  "author": "Darwin Matos",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "swagger-autogen": "node swagger.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongodb": "^7.5.0",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "swagger-autogen": "^2.23.7"
+  }
+}

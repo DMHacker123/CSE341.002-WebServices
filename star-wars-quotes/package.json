@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "swagger-autogen": "node swagger.js"
   },
   "keywords": [],
   "author": "",
@@ -17,13 +18,15 @@
     "ejs": "^6.0.1",
     "express": "^5.2.1",
     "method-override": "^3.0.0",
-    "mongodb": "^7.5.0"
+    "mongodb": "^7.5.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.7.0",
     "globals": "^17.7.0",
     "nodemon": "^3.1.14",
+    "swagger-autogen": "^2.23.7",
     "typescript-eslint": "^8.64.0"
   }
 }

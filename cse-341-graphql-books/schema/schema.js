@@ -65,22 +65,54 @@ const root = {
     return docs.map(formatBook);
   },
 
-  book: async ({ id }) => {
-    const doc = await mongodb.getDb().db().collection('books').findOne({ _id: new ObjectId(id) });
-    if (!doc) throw new Error('Book not found');
+book: async ({ id }) => {
+  try {
+    if (!ObjectId.isValid(id)) {
+      throw new Error('Invalid book ID');
+    }
+
+    const doc = await mongodb
+      .getDb()
+      .db()
+      .collection('books')
+      .findOne({ _id: new ObjectId(id) });
+
+    if (!doc) {
+      throw new Error('Book not found');
+    }
+
     return formatBook(doc);
-  },
+  } catch (error) {
+    throw new Error(`Failed to retrieve book: ${error.message}`);
+  }
+},
 
   authors: async () => {
     const docs = await mongodb.getDb().db().collection('authors').find().toArray();
     return docs.map(formatAuthor);
   },
 
-  author: async ({ id }) => {
-    const doc = await mongodb.getDb().db().collection('authors').findOne({ _id: new ObjectId(id) });
-    if (!doc) throw new Error('Author not found');
+author: async ({ id }) => {
+  try {
+    if (!ObjectId.isValid(id)) {
+      throw new Error('Invalid author ID');
+    }
+
+    const doc = await mongodb
+      .getDb()
+      .db()
+      .collection('authors')
+      .findOne({ _id: new ObjectId(id) });
+
+    if (!doc) {
+      throw new Error('Author not found');
+    }
+
     return formatAuthor(doc);
-  },
+  } catch (error) {
+    throw new Error(`Failed to retrieve author: ${error.message}`);
+  }
+},
 
   addAuthor: async (args) => {
     const errors = validateAuthor(args);
@@ -92,28 +124,94 @@ const root = {
     return formatAuthor({ _id: result.insertedId, name, age });
   },
 
-  addBook: async (args) => {
+addBook: async (args) => {
+  try {
     const errors = validateBook(args);
+
     if (errors.length > 0) {
-      throw new Error(`Validation failed: ${errors.join('; ')}`);
+      throw new Error(errors.join('; '));
     }
+
     const { name, genre, pages, authorId } = args;
-    const book = { name, genre, pages, authorId: new ObjectId(authorId) };
-    const result = await mongodb.getDb().db().collection('books').insertOne(book);
-    return formatBook({ _id: result.insertedId, ...book });
-  },
 
-  deleteBook: async ({ id }) => {
-    const result = await mongodb.getDb().db().collection('books').deleteOne({ _id: new ObjectId(id) });
-    if (result.deletedCount === 0) throw new Error('Book not found');
-    return `Book ${id} deleted successfully`;
-  },
+    if (!ObjectId.isValid(authorId)) {
+      throw new Error('Invalid author ID');
+    }
 
-  deleteAuthor: async ({ id }) => {
-    const result = await mongodb.getDb().db().collection('authors').deleteOne({ _id: new ObjectId(id) });
-    if (result.deletedCount === 0) throw new Error('Author not found');
-    return `Author ${id} deleted successfully`;
+    const author = await mongodb
+      .getDb()
+      .db()
+      .collection('authors')
+      .findOne({ _id: new ObjectId(authorId) });
+
+    if (!author) {
+      throw new Error('Author does not exist');
+    }
+
+    const book = {
+      name,
+      genre,
+      pages,
+      authorId: new ObjectId(authorId)
+    };
+
+    const result = await mongodb
+      .getDb()
+      .db()
+      .collection('books')
+      .insertOne(book);
+
+    return formatBook({
+      _id: result.insertedId,
+      ...book
+    });
+  } catch (error) {
+    throw new Error(`Failed to add book: ${error.message}`);
   }
-};
+},
 
+deleteBook: async ({ id }) => {
+  try {
+    if (!ObjectId.isValid(id)) {
+      throw new Error('Invalid book ID');
+    }
+
+    const result = await mongodb
+      .getDb()
+      .db()
+      .collection('books')
+      .deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) {
+      throw new Error('Book not found');
+    }
+
+    return `Book ${id} deleted successfully`;
+  } catch (error) {
+    throw new Error(`Failed to delete book: ${error.message}`);
+  }
+},
+
+deleteAuthor: async ({ id }) => {
+  try {
+    if (!ObjectId.isValid(id)) {
+      throw new Error('Invalid author ID');
+    }
+
+    const result = await mongodb
+      .getDb()
+      .db()
+      .collection('authors')
+      .deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) {
+      throw new Error('Author not found');
+    }
+
+    return `Author ${id} deleted successfully`;
+  } catch (error) {
+    throw new Error(`Failed to delete author: ${error.message}`);
+  }
+},
+};
 module.exports = { schema, root };

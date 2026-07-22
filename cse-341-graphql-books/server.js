@@ -20,7 +20,8 @@ app.get('/', (req, res) => {
 
 mongodb.initDb((err) => {
   if (err) {
-    console.log(err);
+    console.error('Database connection failed:', err);
+    process.exit(1);
   } else {
     app.listen(port, () => {
       console.log(`Connected to DB and listening on port ${port}`);

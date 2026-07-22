@@ -1,6 +1,7 @@
 const { buildSchema } = require('graphql');
 const { ObjectId } = require('mongodb');
 const mongodb = require('../db/connect');
+const { validateAuthor, validateBook } = require('../validators/books');
 
 const schema = buildSchema(`
   type Book {
@@ -36,21 +37,27 @@ const schema = buildSchema(`
 const formatAuthor = (doc) => ({
   id: doc._id.toString(),
   name: doc.name,
-  age: doc.age
-});
-
-const formatBook = (doc) => ({
-  id: doc._id.toString(),
-  name: doc.name,
-  genre: doc.genre,
-  pages: doc.pages,
-  author: async () => {
-    if (!doc.authorId) return null;
-    const authorDoc = await mongodb.getDb().db().collection('authors').findOne({ _id: doc.authorId });
-    if (!authorDoc) return null;
-    return formatAuthor(authorDoc);
+  age: doc.age,
+  books: async () => {
+    const bookDocs = await mongodb.getDb().db().collection('books').find({ authorId: doc._id }).toArray();
+    return bookDocs.map(formatBook);
   }
 });
+
+function formatBook(doc) {
+  return {
+    id: doc._id.toString(),
+    name: doc.name,
+    genre: doc.genre,
+    pages: doc.pages,
+    author: async () => {
+      if (!doc.authorId) return null;
+      const authorDoc = await mongodb.getDb().db().collection('authors').findOne({ _id: doc.authorId });
+      if (!authorDoc) return null;
+      return formatAuthor(authorDoc);
+    }
+  };
+}
 
 const root = {
   books: async () => {
@@ -75,12 +82,22 @@ const root = {
     return formatAuthor(doc);
   },
 
-  addAuthor: async ({ name, age }) => {
+  addAuthor: async (args) => {
+    const errors = validateAuthor(args);
+    if (errors.length > 0) {
+      throw new Error(`Validation failed: ${errors.join('; ')}`);
+    }
+    const { name, age } = args;
     const result = await mongodb.getDb().db().collection('authors').insertOne({ name, age });
     return formatAuthor({ _id: result.insertedId, name, age });
   },
 
-  addBook: async ({ name, genre, pages, authorId }) => {
+  addBook: async (args) => {
+    const errors = validateBook(args);
+    if (errors.length > 0) {
+      throw new Error(`Validation failed: ${errors.join('; ')}`);
+    }
+    const { name, genre, pages, authorId } = args;
     const book = { name, genre, pages, authorId: new ObjectId(authorId) };
     const result = await mongodb.getDb().db().collection('books').insertOne(book);
     return formatBook({ _id: result.insertedId, ...book });

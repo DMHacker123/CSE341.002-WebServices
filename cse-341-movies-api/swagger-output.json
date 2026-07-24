@@ -5,10 +5,10 @@
     "description": "CRUD API for movies and reviews",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "cse341-002-webservices-3.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "paths": {
     "/": {
